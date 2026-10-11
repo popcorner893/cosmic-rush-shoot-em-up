@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cosmic Rush</title>
+    <meta name="description" content="Retro HTML5 space shooter arcade game built with JavaScript canvas">
+    <meta property="og:title" content="Cosmic Rush">
+    <meta property="og:description" content="Retro HTML5 space shooter arcade game built with JavaScript canvas">
+    <link rel="icon" type="image/png" href="images/bueno.png">
+    <link rel="apple-touch-icon" href="images/bueno.png">
+    <link rel="stylesheet" href="css/arcade.css">
+</head>
+<body>
+
+    <div class="arcade-wrapper">
+        <!-- CABINETA ARCADE CON MONITOR CRT -->
+        <div class="arcade-cabinet">
+            <!-- Efecto de líneas de escaneo CRT y Viñeta de peligro para vibración -->
+            <div class="crt-overlay"></div>
+            <div id="dangerVignette" class="danger-vignette"></div>
+
+            <!-- LIENZO PRINCIPAL DEL JUEGO -->
+            <canvas id="gameCanvas" width="650" height="700"></canvas>
+
+            <!-- HUD EN TIEMPO REAL -->
+            <div id="hudOverlay" class="hud-overlay hidden">
+                <div class="hud-top">
+                    <!-- Perfil, Nombre del Piloto y Power-ups Activos -->
+                    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                        <div class="hud-pilot-tag">
+                            <span id="hudPilotBadge" class="pilot-badge">⚡</span>
+                            <span id="hudPilotName" class="pilot-label">PILOTO-01</span>
+                        </div>
+                        <div id="hudPowerupsBar" class="hud-powerups-bar"></div>
+                    </div>
+
+                    <!-- Puntuación Actual, Récord y Combo -->
+                    <div class="hud-center-stats">
+                        <span class="stat-label">PUNTOS</span>
+                        <span id="hudScore" class="stat-value">000000</span>
+                        <span class="stat-label" style="font-size: 0.45rem; margin-top: 2px;">RÉCORD: <span id="hudHighScore">000000</span></span>
+                        <div id="hudComboBadge" class="hud-combo-badge hidden">COMBO x2</div>
+                    </div>
+
+                    <!-- Vidas y Oleada Actual -->
+                    <div class="hud-right-stats">
+                        <div id="hudWave" class="wave-badge">OLEADA 1</div>
+                        <div id="hudHearts" class="hud-hearts">❤️ ❤️ ❤️</div>
+                    </div>
+                </div>
+
+                <!-- Barra de Salud del Jefe Final (Boss) -->
+                <div id="bossHealthContainer" class="boss-health-container hidden">
+                    <div class="boss-header">
+                        <span class="boss-name">⚠️ NAVE NODRIZA // JEFE FINAL</span>
+                        <span id="bossHealthText">100 / 100 HP</span>
+                    </div>
+                    <div class="boss-health-track">
+                        <div id="bossHealthFill" class="boss-health-fill" style="width: 100%;"></div>
+                    </div>
+                </div>
+
+                <!-- Notificación rápida de inicio de jefe (solo sale al principio y desaparece) -->
+                <div id="bossWarningBanner" class="boss-warning-banner hidden">
+                    <h2>⚠️ JEFE EN APROXIMACIÓN ⚠️</h2>
+                    <p>DETECTADA NAVE NODRIZA</p>
+                </div>
+            </div>
+
+            <!-- PANTALLA 1: AUTENTICACIÓN Y SELECCIÓN DE JUGADORES (LOGIN) -->
+            <div id="loginOverlay" class="modal-overlay">
+                <div class="arcade-card">
+                    <!-- ICONO INICIAL Y LOGO PRINCIPAL -->
+                    <div class="login-hero-badge">
+                        <div class="login-ship-container" id="loginShipContainer">
+                            <img src="images/bueno.png" alt="Nave La Medusa" class="login-hero-ship-img" id="loginShipPreview">
+                        </div>
+                        <div id="loginHeroStatus" class="hero-status-tag">NAVE OPERACIONAL: LA MEDUSA</div>
+                    </div>
+
+                    <h1 class="game-logo-title">COSMIC RUSH</h1>
+                    <p class="subtitle">Space Shooter Retro 2D</p>
+
+                    <!-- Identificación del Piloto -->
+                    <div class="login-form-group">
+                        <label for="pilotInput" class="form-label">INGRESA TU NOMBRE DE PILOTO:</label>
+                        <input type="text" id="pilotInput" class="pilot-input-field" maxlength="14" placeholder="PILOTO-01" value="VALKYRIE" autocomplete="off" spellcheck="false">
+                    </div>
+
+                    <!-- Selección de Perfil / Insignia -->
+                    <div class="login-form-group">
+                        <label class="form-label">SELECCIONA TU PERFIL TÁCTICO:</label>
+                        <div class="avatar-grid">
+                            <div class="avatar-card" data-avatar="phoenix">
+                                <span class="avatar-icon">🦅</span>
+                                <span class="avatar-name">FÉNIX</span>
+                            </div>
+                            <div class="avatar-card selected" data-avatar="valkyrie">
+                                <span class="avatar-icon">⚡</span>
+                                <span class="avatar-name">VALKIRIA</span>
+                            </div>
+                            <div class="avatar-card" data-avatar="titan">
+                                <span class="avatar-icon">🛡️</span>
+                                <span class="avatar-name">TITÁN-9</span>
+                            </div>
+                            <div class="avatar-card" data-avatar="specter">
+                                <span class="avatar-icon">👾</span>
+                                <span class="avatar-name">ESPECTRO</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Acciones -->
+                    <div style="display: flex; gap: 12px; width: 100%; margin-top: 8px;">
+                        <button id="btnStartGame" class="btn-arcade primary" style="flex: 2;">
+                            🚀 INICIAR MISIÓN
+                        </button>
+                        <button id="btnShowLeaderboard" class="btn-arcade secondary" style="flex: 1;">
+                            🏆 RÉCORDS
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL: GAME OVER -->
+            <div id="gameOverModal" class="modal-overlay hidden">
+                <div class="arcade-card">
+                    <h2 class="game-logo-title" style="color: #ff0055; text-shadow: 0 0 15px #ff0055;">GAME OVER</h2>
+                    <div id="newRecordBadge" class="wave-badge hidden" style="color: #ffd700; border-color: #ffd700;">
+                        ⭐ ¡NUEVO RÉCORD PERSONAL! ⭐
+                    </div>
+                    <div style="margin: 10px 0;">
+                        <p class="form-label">PUNTUACIÓN OBTENIDA</p>
+                        <h3 id="finalScoreText" class="stat-value" style="font-size: 1.8rem; margin: 4px 0;">0 PTS</h3>
+                        <p id="finalWaveText" style="color: #94a3b8; font-size: 0.85rem;">Oleada 1</p>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; width: 100%;">
+                        <button id="btnRestart" class="btn-arcade primary" style="flex: 1;">🔄 REINTENTAR</button>
+                        <button id="btnBackToMenu" class="btn-arcade secondary" style="flex: 1;">⚙️ MENÚ</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL: VICTORIA EN OLEADA -->
+            <div id="victoryModal" class="modal-overlay hidden">
+                <div class="arcade-card">
+                    <h2 class="game-logo-title" style="color: #39ff14; text-shadow: 0 0 15px #39ff14;">¡JEFE DERROTADO!</h2>
+                    <p class="subtitle">Sector Galáctico Limpiado</p>
+                    <div style="margin: 10px 0;">
+                        <h3 id="victoryScoreText" class="stat-value" style="font-size: 1.6rem; color: #39ff14;">0 PTS</h3>
+                        <p id="victoryWaveText" style="color: #cbd5e1; font-size: 0.85rem;">Bonus sumado</p>
+                    </div>
+                    <div style="display: flex; gap: 12px; width: 100%;">
+                        <button id="btnNextWave" class="btn-arcade gold" style="flex: 1;">⚡ SIGUIENTE OLEADA</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL: SALÓN DE LA FAMA (RÉCORDS LOCALSTORAGE) -->
+            <div id="leaderboardModal" class="modal-overlay hidden">
+                <div class="arcade-card" style="max-width: 580px;">
+                    <h2 class="game-logo-title" style="font-size: 1.2rem; color: #ffd700;">SALÓN DE LA FAMA</h2>
+                    <p class="subtitle">Mejores Puntuaciones Galácticas</p>
+
+                    <div class="leaderboard-container">
+                        <ul id="recordsList" class="records-list">
+                            <!-- Inyectado dinámicamente -->
+                        </ul>
+                    </div>
+
+                    <button id="btnCloseLeaderboard" class="btn-arcade secondary" style="width: 100%;">
+                        CERRAR
+                    </button>
+                </div>
+            </div>
+
+            <!-- MODAL: PAUSA -->
+            <div id="pauseOverlay" class="modal-overlay hidden">
+                <div class="arcade-card">
+                    <h2 class="game-logo-title">PAUSA</h2>
+                    <p class="subtitle">Sistemas en Espera</p>
+                    <button id="btnResume" class="btn-arcade primary" style="margin-top: 10px;">
+                        ▶️ REANUDAR
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- BARRA DE CONTROLES INFERIOR -->
+        <div class="controls-bar">
+            <div class="keyboard-guide">
+                <span>Mover: <span class="key-badge">← →</span> / <span class="key-badge">A D</span></span>
+                <span>Disparar: <span class="key-badge">ESPACIO</span></span>
+                <span>Pausa: <span class="key-badge">P</span></span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button id="btnAutoFire" class="btn-utility" title="Activar/Desactivar Fuego Automático">🔥 AUTO-FIRE</button>
+                <button id="btnMuteSound" class="btn-utility" title="Silenciar / Activar Sonido">🔊</button>
+            </div>
+        </div>
+
+        <!-- BOTONES TÁCTILES VIRTUALES (PARA MÓVILES / IPAD / SAFARI) -->
+        <div class="touch-pad">
+            <button id="touchLeft" class="touch-btn">◀</button>
+            <button id="touchFire" class="touch-btn fire">DISPARAR</button>
+            <button id="touchRight" class="touch-btn">▶</button>
+        </div>
+    </div>
+
+    <!-- SCRIPTS MODULARES -->
+    <script src="js/audio.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/shake.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/entities.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>

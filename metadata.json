@@ -1,0 +1,8 @@
+{
+  "name": "Remix cosmic-rush",
+  "description": "Videojuego Shoot em Up\n\nImported from GitHub: popcorner893/cosmic-rush",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

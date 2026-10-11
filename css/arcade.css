@@ -1,0 +1,798 @@
+/* ==========================================================================
+   COSMIC RUSH - RETRO ARCADE STYLING & HUD SYSTEM
+   Compatible with Google Chrome & Apple Safari (WebKit)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@500;600;700&display=swap');
+
+:root {
+    --neon-blue: #00f0ff;
+    --neon-pink: #ff0077;
+    --neon-gold: #ffd700;
+    --neon-purple: #b026ff;
+    --neon-green: #39ff14;
+    --dark-bg: #070913;
+    --cabinet-border: #1a1e36;
+    --arcade-font: 'Press Start 2P', monospace, sans-serif;
+    --ui-font: 'Rajdhani', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--dark-bg);
+    background-image: 
+        radial-gradient(circle at 50% 30%, rgba(176, 38, 255, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at 20% 80%, rgba(0, 240, 255, 0.1) 0%, transparent 50%),
+        linear-gradient(180deg, #05060d 0%, #0d1124 100%);
+    color: #e0e6ed;
+    font-family: var(--ui-font);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+    padding: 10px;
+}
+
+/* ==========================================
+   CABINET CONTAINER & SCANLINES
+   ========================================== */
+.arcade-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1000px;
+    width: 100%;
+}
+
+.arcade-cabinet {
+    position: relative;
+    background: #080a14;
+    border: 4px solid var(--cabinet-border);
+    border-radius: 16px;
+    box-shadow: 
+        0 0 30px rgba(0, 240, 255, 0.25),
+        0 0 60px rgba(176, 38, 255, 0.15),
+        inset 0 0 20px rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+    width: 650px;
+    max-width: 100%;
+    height: 700px;
+    max-height: 86vh;
+    aspect-ratio: 650 / 700;
+}
+
+/* CRT Scanline Filter */
+.crt-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 40;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+    background-size: 100% 4px;
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+}
+
+#gameCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: #030408;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+/* ==========================================
+   HUD OVERLAY (TIEMPO REAL)
+   ========================================== */
+.hud-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 12px 16px;
+}
+
+.hud-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.hud-pilot-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(10, 14, 28, 0.85);
+    border: 1px solid rgba(0, 240, 255, 0.4);
+    padding: 6px 12px;
+    border-radius: 8px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+}
+
+.pilot-badge {
+    font-size: 1.2rem;
+}
+
+.pilot-label {
+    font-family: var(--arcade-font);
+    font-size: 0.65rem;
+    color: var(--neon-blue);
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px var(--neon-blue);
+}
+
+.hud-center-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(10, 14, 28, 0.85);
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    padding: 6px 14px;
+    border-radius: 8px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.stat-label {
+    font-family: var(--arcade-font);
+    font-size: 0.55rem;
+    color: #8892b0;
+    letter-spacing: 1px;
+}
+
+.stat-value {
+    font-family: var(--arcade-font);
+    font-size: 0.85rem;
+    color: var(--neon-gold);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+.hud-right-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.wave-badge {
+    font-family: var(--arcade-font);
+    font-size: 0.7rem;
+    color: #ff0077;
+    background: rgba(10, 14, 28, 0.85);
+    border: 1px solid rgba(255, 0, 119, 0.5);
+    padding: 6px 10px;
+    border-radius: 8px;
+    text-shadow: 0 0 8px rgba(255, 0, 119, 0.6);
+}
+
+.hud-hearts {
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    filter: drop-shadow(0 0 6px rgba(255, 0, 0, 0.6));
+}
+
+/* ==========================================
+   BOSS HEALTH BAR
+   ========================================== */
+.boss-health-container {
+    align-self: center;
+    width: 82%;
+    margin-top: 8px;
+    background: rgba(15, 10, 25, 0.9);
+    border: 2px solid var(--neon-pink);
+    border-radius: 8px;
+    padding: 6px 10px;
+    box-shadow: 0 0 15px rgba(255, 0, 119, 0.4);
+    pointer-events: none;
+    animation: pulseBorder 1.5s infinite alternate;
+}
+
+@keyframes pulseBorder {
+    from { border-color: #ff0077; box-shadow: 0 0 10px rgba(255, 0, 119, 0.4); }
+    to { border-color: #ff0033; box-shadow: 0 0 22px rgba(255, 0, 51, 0.8); }
+}
+
+.boss-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+    font-family: var(--arcade-font);
+    font-size: 0.6rem;
+    color: #fff;
+}
+
+.boss-name {
+    color: #ff3366;
+    letter-spacing: 1px;
+}
+
+.boss-health-track {
+    width: 100%;
+    height: 12px;
+    background: #250917;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.boss-health-fill {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #ff0077, #ff3300);
+    box-shadow: 0 0 10px #ff0077;
+    transition: width 0.15s ease-out;
+}
+
+/* Warning Banner: Sleek top alert toast (only visible briefly at the start) */
+.boss-warning-banner {
+    position: absolute;
+    top: 65px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(220, 0, 45, 0.92);
+    border: 1px solid #ffd700;
+    padding: 8px 18px;
+    border-radius: 20px;
+    text-align: center;
+    font-family: var(--arcade-font);
+    color: #fff;
+    z-index: 35;
+    box-shadow: 0 0 20px rgba(255, 0, 51, 0.7);
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.boss-warning-banner h2 {
+    font-size: 0.65rem;
+    margin-bottom: 2px;
+    letter-spacing: 1px;
+    color: #fff;
+}
+
+.boss-warning-banner p {
+    font-size: 0.5rem;
+    color: #ffe600;
+}
+
+/* Danger Vignette & Vibration feedback for difficult parts */
+.danger-vignette {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 25;
+    box-shadow: inset 0 0 55px rgba(255, 0, 51, 0.65);
+    animation: dangerPulse 0.9s infinite alternate;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.danger-vignette.active {
+    opacity: 1;
+}
+
+@keyframes dangerPulse {
+    from { box-shadow: inset 0 0 30px rgba(255, 0, 51, 0.4); }
+    to { box-shadow: inset 0 0 75px rgba(255, 0, 51, 0.85); }
+}
+
+/* Thetawave Combo & Powerup Badges */
+.hud-combo-badge {
+    font-family: var(--arcade-font);
+    font-size: 0.6rem;
+    color: #ffd700;
+    background: rgba(20, 15, 5, 0.85);
+    border: 1px solid #ffd700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-shadow: 0 0 8px #ffd700;
+    animation: comboPulse 0.5s infinite alternate;
+    margin-top: 4px;
+}
+
+@keyframes comboPulse {
+    from { transform: scale(0.96); }
+    to { transform: scale(1.04); }
+}
+
+.hud-powerups-bar {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.powerup-pill {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(10, 15, 30, 0.85);
+    border: 1px solid currentColor;
+    font-family: var(--arcade-font);
+}
+
+/* ==========================================
+   MODALES Y PANTALLAS (LOGIN, GAMEOVER, ETC)
+   ========================================== */
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(5, 7, 15, 0.94);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 16px;
+    text-align: center;
+    transition: opacity 0.25s ease;
+    overflow-y: auto;
+}
+
+.modal-overlay.hidden {
+    display: none !important;
+}
+
+.arcade-card {
+    background: #0f1326;
+    border: 2px solid var(--neon-blue);
+    border-radius: 16px;
+    padding: 20px 22px;
+    width: 92%;
+    max-width: 520px;
+    max-height: 96%;
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.35);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    overflow-y: auto;
+}
+
+.arcade-card::-webkit-scrollbar,
+.modal-overlay::-webkit-scrollbar {
+    width: 6px;
+}
+.arcade-card::-webkit-scrollbar-thumb,
+.modal-overlay::-webkit-scrollbar-thumb {
+    background: var(--neon-blue);
+    border-radius: 3px;
+}
+
+.game-logo-title {
+    font-family: var(--arcade-font);
+    font-size: 1.5rem;
+    color: #fff;
+    text-shadow: 
+        0 0 10px var(--neon-blue),
+        0 0 20px var(--neon-blue),
+        0 0 30px var(--neon-purple);
+    letter-spacing: 2px;
+    line-height: 1.2;
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Insignia / Icono Inicial de la Nave en Login */
+.login-hero-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0 2px 0;
+}
+
+.login-ship-container {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle, rgba(0, 240, 255, 0.22) 0%, rgba(15, 19, 38, 0) 70%);
+    border: 2px solid rgba(0, 240, 255, 0.45);
+    border-radius: 50%;
+    box-shadow: 0 0 22px rgba(0, 240, 255, 0.35), inset 0 0 16px rgba(0, 240, 255, 0.2);
+    animation: shipFloat 2.8s ease-in-out infinite;
+    transition: all 0.3s ease;
+}
+
+.login-hero-ship-img {
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.85));
+    transition: transform 0.2s ease, filter 0.3s ease;
+}
+
+.login-ship-container:hover .login-hero-ship-img {
+    transform: scale(1.1);
+}
+
+.hero-status-tag {
+    font-family: var(--arcade-font);
+    font-size: 0.55rem;
+    color: var(--neon-blue);
+    letter-spacing: 1px;
+    background: rgba(0, 240, 255, 0.12);
+    border: 1px solid rgba(0, 240, 255, 0.35);
+    padding: 3px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+}
+
+@keyframes shipFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+/* Formulario de Login de Piloto */
+.login-form-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.form-label {
+    font-family: var(--arcade-font);
+    font-size: 0.65rem;
+    color: var(--neon-blue);
+    letter-spacing: 1px;
+}
+
+.pilot-input-field {
+    width: 100%;
+    background: #060914;
+    border: 2px solid #2a3458;
+    border-radius: 8px;
+    color: #00f0ff;
+    font-family: var(--arcade-font);
+    font-size: 0.85rem;
+    padding: 12px 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.pilot-input-field:focus {
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+}
+
+/* Selector de Avatares / Perfiles */
+.avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    width: 100%;
+    margin-top: 6px;
+}
+
+.avatar-card {
+    background: #141a33;
+    border: 2px solid #232c4d;
+    border-radius: 10px;
+    padding: 10px 4px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s;
+}
+
+.avatar-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--neon-blue);
+}
+
+.avatar-card.selected {
+    border-color: var(--neon-gold);
+    background: #1a2245;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+}
+
+.avatar-icon {
+    font-size: 1.5rem;
+}
+
+.avatar-name {
+    font-family: var(--arcade-font);
+    font-size: 0.45rem;
+    color: #cbd5e1;
+}
+
+/* Botones Arcade */
+.btn-arcade {
+    font-family: var(--arcade-font);
+    font-size: 0.75rem;
+    padding: 14px 24px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-transform: uppercase;
+}
+
+.btn-arcade.primary {
+    background: linear-gradient(135deg, #00f0ff 0%, #0077ff 100%);
+    color: #030a1c;
+    font-weight: bold;
+    box-shadow: 0 0 18px rgba(0, 240, 255, 0.5);
+}
+
+.btn-arcade.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 28px rgba(0, 240, 255, 0.8);
+}
+
+.btn-arcade.secondary {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+}
+
+.btn-arcade.secondary:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: #fff;
+}
+
+.btn-arcade.gold {
+    background: linear-gradient(135deg, #ffd700 0%, #ff8800 100%);
+    color: #1a1000;
+    box-shadow: 0 0 18px rgba(255, 215, 0, 0.5);
+}
+
+/* ==========================================
+   LISTA DE RÉCORDS (SALÓN DE LA FAMA)
+   ========================================== */
+.leaderboard-container {
+    width: 100%;
+    max-height: 280px;
+    overflow-y: auto;
+    margin: 10px 0;
+    padding-right: 6px;
+}
+
+.records-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.record-row {
+    display: grid;
+    grid-template-columns: 35px 1fr 65px 95px 110px;
+    align-items: center;
+    background: #090d1c;
+    border: 1px solid #1a223f;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    gap: 6px;
+    text-align: left;
+}
+
+.record-row.gold {
+    border-color: #ffd700;
+    background: rgba(255, 215, 0, 0.08);
+}
+.record-row.silver {
+    border-color: #c0c0c0;
+    background: rgba(192, 192, 192, 0.08);
+}
+.record-row.bronze {
+    border-color: #cd7f32;
+    background: rgba(205, 127, 50, 0.08);
+}
+
+.record-rank {
+    font-family: var(--arcade-font);
+    font-size: 0.65rem;
+    color: var(--neon-gold);
+}
+
+.record-pilot {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow: hidden;
+}
+
+.pilot-name {
+    font-family: var(--arcade-font);
+    font-size: 0.6rem;
+    color: #fff;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.record-wave {
+    font-family: var(--arcade-font);
+    font-size: 0.55rem;
+    color: #ff0077;
+}
+
+.record-score {
+    font-family: var(--arcade-font);
+    font-size: 0.6rem;
+    color: var(--neon-gold);
+    text-align: right;
+}
+
+.record-date {
+    font-size: 0.7rem;
+    color: #64748b;
+    text-align: right;
+}
+
+.empty-notice {
+    padding: 20px;
+    color: #64748b;
+    font-style: italic;
+}
+
+/* ==========================================
+   PANEL INFERIOR & CONTROLES TÁCTILES
+   ========================================== */
+.controls-bar {
+    width: 650px;
+    max-width: 100%;
+    margin-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0f1326;
+    border: 2px solid var(--cabinet-border);
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-size: 0.9rem;
+}
+
+.keyboard-guide {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+.key-badge {
+    background: #1e2642;
+    border: 1px solid #3b4668;
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: var(--neon-blue);
+    font-family: monospace;
+    font-size: 0.8rem;
+}
+
+.btn-utility {
+    background: #141a33;
+    border: 1px solid #2a3558;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.btn-utility:hover {
+    background: #1e2648;
+    border-color: var(--neon-blue);
+}
+
+.btn-utility.active {
+    background: var(--neon-pink);
+    border-color: #fff;
+}
+
+/* Touch Pad On-screen */
+.touch-pad {
+    display: none;
+    width: 650px;
+    max-width: 100%;
+    margin-top: 10px;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.touch-btn {
+    flex: 1;
+    background: #151b36;
+    border: 2px solid #2c3866;
+    color: #fff;
+    font-size: 1.4rem;
+    padding: 14px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.touch-btn:active {
+    background: var(--neon-blue);
+    color: #000;
+}
+
+.touch-btn.fire {
+    flex: 1.5;
+    background: linear-gradient(135deg, #ff0077 0%, #ff3300 100%);
+    border-color: #ff3366;
+    font-family: var(--arcade-font);
+    font-size: 0.8rem;
+}
+
+.touch-btn.fire:active {
+    background: #ff5500;
+    color: #fff;
+}
+
+/* Mostrar controles táctiles en pantallas táctiles o móviles */
+@media (max-width: 768px), (pointer: coarse) {
+    .touch-pad {
+        display: flex;
+    }
+}
