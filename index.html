@@ -20,20 +20,14 @@
             <div class="crt-overlay"></div>
             <div id="dangerVignette" class="danger-vignette"></div>
 
-            <!-- LIENZO PRINCIPAL DEL JUEGO -->
-            <canvas id="gameCanvas" width="650" height="700"></canvas>
+            <!-- LIENZO PRINCIPAL DEL JUEGO (16:9 HD NATIVO) -->
+            <canvas id="gameCanvas" width="1280" height="720"></canvas>
 
-            <!-- HUD EN TIEMPO REAL -->
+            <!-- HUD EN TIEMPO REAL (MINIMALISTA Y LIMPIO) -->
             <div id="hudOverlay" class="hud-overlay hidden">
                 <div class="hud-top">
-                    <!-- Perfil, Nombre del Piloto y Power-ups Activos -->
-                    <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                        <div class="hud-pilot-tag">
-                            <span id="hudPilotBadge" class="pilot-badge">⚡</span>
-                            <span id="hudPilotName" class="pilot-label">PILOTO-01</span>
-                        </div>
-                        <div id="hudPowerupsBar" class="hud-powerups-bar"></div>
-                    </div>
+                    <!-- Power-ups Activos -->
+                    <div id="hudPowerupsBar" class="hud-powerups-bar"></div>
 
                     <!-- Puntuación Actual, Récord y Combo -->
                     <div class="hud-center-stats">
@@ -43,83 +37,55 @@
                         <div id="hudComboBadge" class="hud-combo-badge hidden">COMBO x2</div>
                     </div>
 
-                    <!-- Vidas y Oleada Actual -->
+                    <!-- Vidas, Oleada Actual y Silenciador discreto -->
                     <div class="hud-right-stats">
-                        <div id="hudWave" class="wave-badge">OLEADA 1</div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div id="hudWave" class="wave-badge">OLEADA 1</div>
+                            <button id="btnMuteSound" class="btn-sound-mini" title="Silenciar / Activar Sonido">🔊</button>
+                        </div>
                         <div id="hudHearts" class="hud-hearts">❤️ ❤️ ❤️</div>
                     </div>
                 </div>
-
-                <!-- Barra de Salud del Jefe Final (Boss) -->
-                <div id="bossHealthContainer" class="boss-health-container hidden">
-                    <div class="boss-header">
-                        <span class="boss-name">⚠️ NAVE NODRIZA // JEFE FINAL</span>
-                        <span id="bossHealthText">100 / 100 HP</span>
-                    </div>
-                    <div class="boss-health-track">
-                        <div id="bossHealthFill" class="boss-health-fill" style="width: 100%;"></div>
-                    </div>
-                </div>
-
-                <!-- Notificación rápida de inicio de jefe (solo sale al principio y desaparece) -->
-                <div id="bossWarningBanner" class="boss-warning-banner hidden">
-                    <h2>⚠️ JEFE EN APROXIMACIÓN ⚠️</h2>
-                    <p>DETECTADA NAVE NODRIZA</p>
-                </div>
             </div>
 
-            <!-- PANTALLA 1: AUTENTICACIÓN Y SELECCIÓN DE JUGADORES (LOGIN) -->
-            <div id="loginOverlay" class="modal-overlay">
-                <div class="arcade-card">
-                    <!-- ICONO INICIAL Y LOGO PRINCIPAL -->
-                    <div class="login-hero-badge">
-                        <div class="login-ship-container" id="loginShipContainer">
-                            <img src="images/bueno.png" alt="Nave La Medusa" class="login-hero-ship-img" id="loginShipPreview">
-                        </div>
-                        <div id="loginHeroStatus" class="hero-status-tag">NAVE OPERACIONAL: LA MEDUSA</div>
-                    </div>
-
-                    <h1 class="game-logo-title">COSMIC RUSH</h1>
-                    <p class="subtitle">Space Shooter Retro 2D</p>
-
-                    <!-- Identificación del Piloto -->
-                    <div class="login-form-group">
-                        <label for="pilotInput" class="form-label">INGRESA TU NOMBRE DE PILOTO:</label>
-                        <input type="text" id="pilotInput" class="pilot-input-field" maxlength="14" placeholder="PILOTO-01" value="VALKYRIE" autocomplete="off" spellcheck="false">
-                    </div>
-
-                    <!-- Selección de Perfil / Insignia -->
-                    <div class="login-form-group">
-                        <label class="form-label">SELECCIONA TU PERFIL TÁCTICO:</label>
-                        <div class="avatar-grid">
-                            <div class="avatar-card" data-avatar="phoenix">
-                                <span class="avatar-icon">🦅</span>
-                                <span class="avatar-name">FÉNIX</span>
-                            </div>
-                            <div class="avatar-card selected" data-avatar="valkyrie">
-                                <span class="avatar-icon">⚡</span>
-                                <span class="avatar-name">VALKIRIA</span>
-                            </div>
-                            <div class="avatar-card" data-avatar="titan">
-                                <span class="avatar-icon">🛡️</span>
-                                <span class="avatar-name">TITÁN-9</span>
-                            </div>
-                            <div class="avatar-card" data-avatar="specter">
-                                <span class="avatar-icon">👾</span>
-                                <span class="avatar-name">ESPECTRO</span>
-                            </div>
+            <!-- PORTADA DEL MENÚ PRINCIPAL (IMAGEN OFICIAL Y BOTONES INTERACTIVOS) -->
+            <div id="mainMenuOverlay" class="main-menu-overlay">
+                <div class="main-menu-stage" id="mainMenuStage">
+                    <img id="mainMenuCover" src="Main_Menu.jfif" alt="Cosmic Rush" class="main-menu-image" onerror="handleMenuImageError(this)">
+                    
+                    <!-- Asistente de carga rápida si el archivo aún no ha sido copiado al servidor -->
+                    <div id="menuImageFallback" class="menu-image-fallback hidden">
+                        <div class="fallback-card">
+                            <span class="fallback-icon">🚀</span>
+                            <h3>PORTADA PRINCIPAL: Main_Menu.jfif</h3>
+                            <p>Haz clic o arrastra aquí tu archivo <strong>Main_Menu.jfif</strong> para visualizarla permanentemente.</p>
+                            <input type="file" id="menuFileInput" accept=".jfif,.jpg,.jpeg,.png" style="display: none;">
+                            <button id="btnSelectMenuImage" class="btn-arcade gold" type="button">📁 SELECCIONAR Main_Menu.jfif</button>
                         </div>
                     </div>
 
-                    <!-- Acciones -->
-                    <div style="display: flex; gap: 12px; width: 100%; margin-top: 8px;">
-                        <button id="btnStartGame" class="btn-arcade primary" style="flex: 2;">
-                            🚀 INICIAR MISIÓN
-                        </button>
-                        <button id="btnShowLeaderboard" class="btn-arcade secondary" style="flex: 1;">
-                            🏆 RÉCORDS
-                        </button>
-                    </div>
+                    <!-- BOTÓN SUPERIOR DERECHO: INICIAR SESIÓN -->
+                    <button id="btnMenuLogin" class="menu-hotspot-btn btn-login" aria-label="Iniciar sesión" title="Iniciar sesión">
+                        <span class="hotspot-highlight"></span>
+                    </button>
+
+                    <!-- BOTONES DERECHOS: HISTORIA (ACTIVO), INFINITO, RANKING -->
+                    <button id="btnMenuStory" class="menu-hotspot-btn btn-story" aria-label="Historia" title="Historia">
+                        <span class="hotspot-highlight"></span>
+                    </button>
+
+                    <button id="btnMenuEndless" class="menu-hotspot-btn btn-endless" aria-label="Infinito" title="Infinito">
+                        <span class="hotspot-highlight"></span>
+                    </button>
+
+                    <button id="btnMenuRanking" class="menu-hotspot-btn btn-ranking" aria-label="Ranking" title="Ranking">
+                        <span class="hotspot-highlight"></span>
+                    </button>
+
+                    <!-- BOTÓN INFERIOR IZQUIERDO: INSERTAR CÓDIGO -->
+                    <button id="btnMenuCode" class="menu-hotspot-btn btn-code" aria-label="Insertar Código" title="Insertar Código">
+                        <span class="hotspot-highlight"></span>
+                    </button>
                 </div>
             </div>
 
@@ -188,18 +154,6 @@
             </div>
         </div>
 
-        <!-- BARRA DE CONTROLES INFERIOR -->
-        <div class="controls-bar">
-            <div class="keyboard-guide">
-                <span>Mover: <span class="key-badge">← →</span> / <span class="key-badge">A D</span></span>
-                <span>Disparar: <span class="key-badge">ESPACIO</span></span>
-                <span>Pausa: <span class="key-badge">P</span></span>
-            </div>
-            <div style="display: flex; gap: 8px;">
-                <button id="btnAutoFire" class="btn-utility" title="Activar/Desactivar Fuego Automático">🔥 AUTO-FIRE</button>
-                <button id="btnMuteSound" class="btn-utility" title="Silenciar / Activar Sonido">🔊</button>
-            </div>
-        </div>
 
         <!-- BOTONES TÁCTILES VIRTUALES (PARA MÓVILES / IPAD / SAFARI) -->
         <div class="touch-pad">
@@ -208,6 +162,27 @@
             <button id="touchRight" class="touch-btn">▶</button>
         </div>
     </div>
+
+    <!-- GESTIÓN DE CARGA DE IMAGEN DE PORTADA -->
+    <script>
+        function handleMenuImageError(img) {
+            try {
+                const cached = localStorage.getItem('cosmic_rush_menu_img');
+                if (cached) {
+                    img.src = cached;
+                    return;
+                }
+            } catch (_) {}
+
+            if (img.src.indexOf('images/') === -1) {
+                img.src = 'images/Main_Menu.jfif';
+                return;
+            }
+
+            const fallback = document.getElementById('menuImageFallback');
+            if (fallback) fallback.classList.remove('hidden');
+        }
+    </script>
 
     <!-- SCRIPTS MODULARES -->
     <script src="js/audio.js"></script>

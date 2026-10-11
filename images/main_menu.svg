@@ -1,0 +1,345 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%">
+  <defs>
+    <!-- Filtros de brillo y resplandor -->
+    <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    <filter id="glow-orange" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    <filter id="glow-green" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    <filter id="star-flare" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    <filter id="btn-shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="4" dy="8" stdDeviation="4" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+
+    <!-- Gradientes cósmicos del fondo -->
+    <radialGradient id="nebula-purple" cx="25%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#801b9c" stop-opacity="0.8" />
+      <stop offset="35%" stop-color="#4a0e68" stop-opacity="0.6" />
+      <stop offset="70%" stop-color="#1f0938" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#05030f" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="nebula-orange" cx="80%" cy="35%" r="55%">
+      <stop offset="0%" stop-color="#ff5100" stop-opacity="0.85" />
+      <stop offset="25%" stop-color="#d62c00" stop-opacity="0.65" />
+      <stop offset="55%" stop-color="#731100" stop-opacity="0.45" />
+      <stop offset="85%" stop-color="#0b0312" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="nebula-center" cx="50%" cy="50%" r="45%">
+      <stop offset="0%" stop-color="#3b156b" stop-opacity="0.7" />
+      <stop offset="50%" stop-color="#160829" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#04020a" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="burst-flare" cx="22%" cy="72%" r="28%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
+      <stop offset="15%" stop-color="#d946ef" stop-opacity="0.9" />
+      <stop offset="45%" stop-color="#8b5cf6" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#04020a" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Gradiente del Planeta Tierra -->
+    <radialGradient id="earth-grad" cx="38%" cy="32%" r="65%">
+      <stop offset="0%" stop-color="#93c5fd" />
+      <stop offset="20%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#0284c7" />
+      <stop offset="75%" stop-color="#0369a1" />
+      <stop offset="95%" stop-color="#082f49" />
+      <stop offset="100%" stop-color="#020617" />
+    </radialGradient>
+    <radialGradient id="earth-halo" cx="50%" cy="50%" r="50%">
+      <stop offset="75%" stop-color="#38bdf8" stop-opacity="0" />
+      <stop offset="88%" stop-color="#38bdf8" stop-opacity="0.6" />
+      <stop offset="96%" stop-color="#67e8f9" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#a5f3fc" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Gradientes de Botones de Madera / Arcilla estilo Cartoon -->
+    <linearGradient id="btn-wood" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffe8c2" />
+      <stop offset="25%" stop-color="#fbd29c" />
+      <stop offset="75%" stop-color="#eebc7f" />
+      <stop offset="100%" stop-color="#d69b59" />
+    </linearGradient>
+
+    <!-- Gradientes de Texto COSMIC RUSH -->
+    <linearGradient id="cosmic-front" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e0f2fe" />
+      <stop offset="25%" stop-color="#7dd3fc" />
+      <stop offset="55%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </linearGradient>
+
+    <linearGradient id="rush-front" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="28%" stop-color="#f59e0b" />
+      <stop offset="65%" stop-color="#ea580c" />
+      <stop offset="100%" stop-color="#b91c1c" />
+    </linearGradient>
+
+    <!-- Gradiente del Alien verde -->
+    <linearGradient id="alien-body" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#bbf7d0" />
+      <stop offset="30%" stop-color="#4ade80" />
+      <stop offset="75%" stop-color="#22c55e" />
+      <stop offset="100%" stop-color="#15803d" />
+    </linearGradient>
+
+    <linearGradient id="trail-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+      <stop offset="20%" stop-color="#86efac" stop-opacity="0.8" />
+      <stop offset="60%" stop-color="#22c55e" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#15803d" stop-opacity="0.95" />
+    </linearGradient>
+  </defs>
+
+  <!-- FONDO ESPACIAL -->
+  <rect width="1920" height="1080" fill="#04020a" />
+  <rect width="1920" height="1080" fill="url(#nebula-purple)" />
+  <rect width="1920" height="1080" fill="url(#nebula-orange)" />
+  <rect width="1920" height="1080" fill="url(#nebula-center)" />
+  <circle cx="430" cy="770" r="420" fill="url(#burst-flare)" />
+
+  <!-- LÍNEAS DE VELOCIDAD HIPERESPACIAL -->
+  <g stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round">
+    <line x1="960" y1="540" x2="120" y2="110" stroke="rgba(192,132,252,0.6)" stroke-width="2.2" />
+    <line x1="960" y1="540" x2="280" y2="40" />
+    <line x1="960" y1="540" x2="60" y2="380" stroke="rgba(251,146,60,0.5)" />
+    <line x1="960" y1="540" x2="80" y2="720" stroke="rgba(217,70,239,0.5)" />
+    <line x1="960" y1="540" x2="180" y2="920" stroke-width="2.5" />
+    <line x1="960" y1="540" x2="350" y2="1050" />
+    <line x1="960" y1="540" x2="720" y2="1070" stroke="rgba(251,191,36,0.5)" />
+    <line x1="960" y1="540" x2="1750" y2="140" stroke="rgba(251,146,60,0.7)" stroke-width="3" />
+    <line x1="960" y1="540" x2="1880" y2="350" stroke="rgba(251,191,36,0.6)" />
+    <line x1="960" y1="540" x2="1620" y2="40" />
+    <line x1="960" y1="540" x2="1840" y2="780" stroke="rgba(217,70,239,0.5)" />
+    <line x1="960" y1="540" x2="1680" y2="1040" />
+  </g>
+
+  <!-- ESTRELLAS Y DESTELLOS -->
+  <g fill="#ffffff">
+    <circle cx="150" cy="180" r="2.5" />
+    <circle cx="290" cy="120" r="1.5" />
+    <circle cx="480" cy="80" r="3" />
+    <circle cx="820" cy="70" r="2" />
+    <circle cx="1120" cy="110" r="2" />
+    <circle cx="1380" cy="130" r="3" />
+    <circle cx="140" cy="420" r="2" />
+    <circle cx="320" cy="510" r="1.5" />
+    <circle cx="80" cy="620" r="2.5" />
+    <circle cx="210" cy="820" r="3" />
+    <circle cx="580" cy="940" r="2" />
+    <circle cx="780" cy="1010" r="2.5" />
+    <circle cx="1020" cy="980" r="1.5" />
+    <circle cx="1320" cy="920" r="2" />
+    <circle cx="1650" cy="510" r="2.5" />
+    <circle cx="1780" cy="220" r="3" />
+    <circle cx="1850" cy="120" r="2" />
+    <circle cx="1540" cy="280" r="2" />
+    <circle cx="940" cy="220" r="2" />
+    <circle cx="1210" cy="380" r="3" />
+    <circle cx="160" cy="890" r="2" />
+    <circle cx="610" cy="840" r="3.5" filter="url(#star-flare)" />
+    <circle cx="430" cy="770" r="5" filter="url(#star-flare)" />
+    <circle cx="1450" cy="260" r="4" filter="url(#star-flare)" />
+  </g>
+
+  <!-- ASTEROIDES FLOTANTES -->
+  <g fill="#332b3d" stroke="#1f1829" stroke-width="3">
+    <!-- Asteroide izquierda medio -->
+    <polygon points="265,300 295,280 320,310 305,345 270,335" />
+    <!-- Asteroide arriba derecha -->
+    <polygon points="1520,220 1560,195 1595,235 1570,270 1525,255" />
+    <!-- Asteroide abajo izquierda -->
+    <polygon points="655,930 680,910 705,935 690,965 660,955" />
+    <!-- Asteroide abajo centro -->
+    <polygon points="1380,940 1430,920 1470,950 1445,985 1395,975" />
+    <!-- Asteroide pequeño -->
+    <polygon points="650,450 670,440 685,455 675,475 655,470" />
+    <polygon points="1490,460 1515,445 1530,465 1520,485 1500,480" />
+  </g>
+
+  <!-- PLANETA TIERRA (SUPERIOR IZQUIERDA) -->
+  <g transform="translate(660, 180)">
+    <!-- Halo exterior -->
+    <circle cx="0" cy="0" r="122" fill="url(#earth-halo)" />
+    <!-- Esfera base -->
+    <circle cx="0" cy="0" r="105" fill="url(#earth-grad)" />
+    <!-- Continentes estilizados -->
+    <path d="M-40,-60 Q-20,-40 -10,-55 Q10,-70 30,-50 Q45,-30 20,-10 Q-10,0 -30,-20 Z" fill="#22c55e" opacity="0.65" />
+    <path d="M-15,-10 Q10,10 25,40 Q15,70 -10,80 Q-35,60 -25,20 Z" fill="#15803d" opacity="0.7" />
+    <path d="M20,-40 Q50,-50 65,-20 Q60,10 35,0 Z" fill="#16a34a" opacity="0.6" />
+    <!-- Nubes arremolinadas -->
+    <path d="M-70,-30 Q-20,-60 40,-40 Q80,-10 50,20 Q10,0 -40,30 Q-80,10 -70,-30" fill="#ffffff" opacity="0.45" />
+    <path d="M-30,40 Q20,20 60,60 Q20,80 -20,70 Z" fill="#ffffff" opacity="0.35" />
+    <!-- Atmósfera resplandor superior -->
+    <ellipse cx="-25" cy="-25" rx="90" ry="70" fill="url(#earth-halo)" opacity="0.4" />
+  </g>
+
+  <!-- ESTELA CÓSMICA VERDE (SALE DE LA TIERRA HACIA EL ALIEN) -->
+  <g filter="url(#glow-green)">
+    <!-- Trazo amplio difuso -->
+    <path d="M660,200 C580,260 520,380 540,500 C560,620 660,700 800,740 C940,780 1050,770 1150,740" 
+          fill="none" stroke="rgba(34,197,94,0.4)" stroke-width="85" stroke-linecap="round" />
+    <!-- Trazo medio brillante -->
+    <path d="M660,200 C580,260 520,380 540,500 C560,620 660,700 800,740 C940,780 1050,770 1150,740" 
+          fill="none" stroke="url(#trail-grad)" stroke-width="38" stroke-linecap="round" />
+    <!-- Núcleo de plasma blanco/lima -->
+    <path d="M660,200 C580,260 520,380 540,500 C560,620 660,700 800,740 C940,780 1050,770 1150,740" 
+          fill="none" stroke="#eefdf5" stroke-width="12" stroke-linecap="round" />
+  </g>
+
+  <!-- PARTÍCULAS / DESTELLOS DE LA ESTELA -->
+  <g fill="#86efac">
+    <circle cx="610" cy="320" r="6" />
+    <circle cx="540" cy="420" r="8" />
+    <circle cx="560" cy="560" r="10" />
+    <circle cx="640" cy="650" r="7" />
+    <circle cx="740" cy="710" r="9" />
+    <circle cx="860" cy="750" r="11" />
+    <circle cx="980" cy="760" r="8" />
+    <circle cx="1070" cy="750" r="12" />
+  </g>
+
+  <!-- TITULO LOGO "COSMIC RUSH" (CENTRO) -->
+  <g transform="translate(1050, 420)">
+    <!-- ==================== "COSMIC" ==================== -->
+    <g transform="translate(0, -60) skewX(-10)">
+      <!-- Sombra / Profundidad 3D Extruida de COSMIC -->
+      <text x="6" y="8" text-anchor="middle" font-family="'Impact', 'Arial Black', sans-serif" font-weight="900" font-size="160" fill="#1e1035" stroke="#1e1035" stroke-width="26" stroke-linejoin="round">COSMIC</text>
+      <text x="4" y="6" text-anchor="middle" font-family="'Impact', 'Arial Black', sans-serif" font-weight="900" font-size="160" fill="#4c1d95" stroke="#4c1d95" stroke-width="20" stroke-linejoin="round">COSMIC</text>
+      <text x="0" y="0" text-anchor="middle" font-family="'Impact', 'Arial Black', sans-serif" font-weight="900" font-size="160" fill="#3b82f6" stroke="#8b5cf6" stroke-width="12" stroke-linejoin="round" filter="url(#glow-cyan)">COSMIC</text>
+      <text x="0" y="0" text-anchor="middle" font-family="'Impact', 'Arial Black', sans-serif" font-weight="900" font-size="160" fill="url(#cosmic-front)">COSMIC</text>
+      <!-- Brillo superior -->
+      <text x="0" y="-3" text-anchor="middle" font-family="'Impact', 'Arial Black', sans-serif" font-weight="900" font-size="156" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.8">COSMIC</text>
+    </g>
+
+    <!-- ==================== "RUSH" ==================== -->
+    <g transform="translate(30, 80) skewX(-14)">
+      <!-- Estelas de velocidad horizontal detrás de RUSH -->
+      <g stroke="url(#rush-front)" stroke-linecap="round" opacity="0.8" filter="url(#glow-orange)">
+        <line x1="-360" y1="-25" x2="-80" y2="-25" stroke-width="12" />
+        <line x1="-420" y1="5" x2="-100" y2="5" stroke-width="16" />
+        <line x1="-340" y1="35" x2="-60" y2="35" stroke-width="10" />
+        <line x1="-280" y1="65" x2="-40" y2="65" stroke-width="8" />
+        <line x1="220" y1="-20" x2="380" y2="-20" stroke-width="10" />
+        <line x1="240" y1="15" x2="420" y2="15" stroke-width="14" />
+      </g>
+      <!-- Sombra / Profundidad 3D Extruida de RUSH -->
+      <text x="8" y="10" text-anchor="middle" font-family="'Impact', 'Arial Black', sans-serif" font-weight="900" font-size="190" fill="#450a0a" stroke="#450a0a" stroke-width="28" stroke-linejoin="round">RUSH</text>
+      <text x="5" y="6" text-anchor="middle" font-family="'Impact', 'Arial Black', sans-serif" font-weight="900" font-size="190" fill="#991b1b" stroke="#991b1b" stroke-width="20" stroke-linejoin="round">RUSH</text>
+      <text x="0" y="0" text-anchor="middle" font-family="'Impact', 'Arial Black', sans-serif" font-weight="900" font-size="190" fill="#ea580c" stroke="#f59e0b" stroke-width="12" stroke-linejoin="round" filter="url(#glow-orange)">RUSH</text>
+      <text x="0" y="0" text-anchor="middle" font-family="'Impact', 'Arial Black', sans-serif" font-weight="900" font-size="190" fill="url(#rush-front)">RUSH</text>
+      <!-- Destello superior RUSH -->
+      <text x="0" y="-4" text-anchor="middle" font-family="'Impact', 'Arial Black', sans-serif" font-weight="900" font-size="186" fill="none" stroke="#fffbeb" stroke-width="4" opacity="0.9">RUSH</text>
+    </g>
+  </g>
+
+  <!-- ALIEN MASCOTA VERDE CON GAFAS (INFERIOR CENTRO/DERECHA) -->
+  <g transform="translate(1160, 720)">
+    <!-- Antena con esfera -->
+    <path d="M-8,-100 Q-5,-130 5,-150" fill="none" stroke="#15803d" stroke-width="12" stroke-linecap="round" />
+    <path d="M-8,-100 Q-5,-130 5,-150" fill="none" stroke="#4ade80" stroke-width="7" stroke-linecap="round" />
+    <circle cx="6" cy="-155" r="16" fill="#86efac" filter="url(#glow-green)" />
+    <circle cx="6" cy="-155" r="11" fill="#ffffff" />
+
+    <!-- Tentáculos inferiores en movimiento -->
+    <g fill="#16a34a" stroke="#14532d" stroke-width="6" stroke-linejoin="round">
+      <path d="M-90,60 Q-120,110 -150,100 Q-160,85 -140,75 Q-110,75 -80,50 Z" />
+      <path d="M-60,70 Q-80,130 -100,140 Q-115,130 -95,105 Q-70,90 -40,70 Z" />
+      <path d="M-20,80 Q-30,150 -50,170 Q-65,160 -45,130 Q-25,95 0,80 Z" />
+      <path d="M20,80 Q30,150 40,165 Q60,155 45,125 Q30,95 20,80 Z" />
+      <path d="M60,70 Q80,135 105,145 Q120,130 95,110 Q70,90 50,70 Z" />
+      <path d="M90,60 Q120,110 145,100 Q155,85 130,80 Q105,75 80,50 Z" />
+    </g>
+
+    <!-- Cuerpo cúbico gelatinoso verde -->
+    <rect x="-105" y="-105" width="210" height="195" rx="65" fill="#14532d" />
+    <rect x="-100" y="-100" width="200" height="185" rx="60" fill="url(#alien-body)" stroke="#86efac" stroke-width="5" />
+    <!-- Brillo gelatinoso cabeza -->
+    <ellipse cx="-40" cy="-65" rx="35" ry="18" fill="#ffffff" opacity="0.55" transform="rotate(-15, -40, -65)" />
+
+    <!-- GAFAS DEPORTIVAS DE PILOTO (REDONDAS CON BORDES BLANCOS/GRISES) -->
+    <!-- Montura de las gafas -->
+    <rect x="-92" y="-42" width="184" height="92" rx="46" fill="#0f172a" stroke="#cbd5e1" stroke-width="8" />
+    <!-- Lente Izquierda -->
+    <circle cx="-42" cy="4" r="34" fill="#311042" stroke="#6b21a8" stroke-width="4" />
+    <circle cx="-42" cy="4" r="26" fill="#1e102d" />
+    <circle cx="-48" cy="-4" r="10" fill="#ffffff" opacity="0.9" />
+    <circle cx="-34" cy="14" r="4" fill="#ffffff" opacity="0.7" />
+    <circle cx="-40" cy="4" r="18" fill="#3b0764" opacity="0.4" />
+    
+    <!-- Lente Derecha -->
+    <circle cx="42" cy="4" r="34" fill="#311042" stroke="#6b21a8" stroke-width="4" />
+    <circle cx="42" cy="4" r="26" fill="#1e102d" />
+    <circle cx="36" cy="-4" r="10" fill="#ffffff" opacity="0.9" />
+    <circle cx="50" cy="14" r="4" fill="#ffffff" opacity="0.7" />
+    <circle cx="44" cy="4" r="18" fill="#3b0764" opacity="0.4" />
+
+    <!-- Puente de las gafas -->
+    <rect x="-10" y="-4" width="20" height="12" rx="4" fill="#94a3b8" />
+  </g>
+
+  <!-- ==========================================
+       BOTONES DEL MENÚ (CARTOON / CLAY PILLS)
+       ========================================== -->
+  <g id="menu-buttons" filter="url(#btn-shadow)">
+    <!-- 1. BOTÓN SUPERIOR DERECHO: INICIAR SESIÓN -->
+    <g transform="translate(1510, 36)">
+      <!-- Base del botón -->
+      <rect x="0" y="0" width="370" height="84" rx="24" fill="#2d170a" />
+      <rect x="4" y="4" width="362" height="74" rx="20" fill="url(#btn-wood)" stroke="#5c3413" stroke-width="4" />
+      <!-- Borde superior iluminado -->
+      <path d="M24,10 L346,10" stroke="#fffbeb" stroke-width="4" stroke-linecap="round" opacity="0.7" />
+      <!-- Icono de usuario + Texto -->
+      <g transform="translate(42, 42)">
+        <circle cx="0" cy="-6" r="12" fill="#2d170a" />
+        <path d="M-15,16 Q-14,2 0,2 Q14,2 15,16 Z" fill="#2d170a" />
+      </g>
+      <text x="80" y="52" font-family="'Impact', 'Arial Black', sans-serif" font-size="34" font-weight="900" fill="#2d170a" letter-spacing="1">INICIAR SESIÓN</text>
+    </g>
+
+    <!-- 2. BOTÓN INFERIOR IZQUIERDO: INSERTAR CÓDIGO -->
+    <g transform="translate(56, 940)">
+      <rect x="0" y="0" width="410" height="90" rx="24" fill="#2d170a" />
+      <rect x="4" y="4" width="402" height="80" rx="20" fill="url(#btn-wood)" stroke="#5c3413" stroke-width="4" />
+      <path d="M24,10 L386,10" stroke="#fffbeb" stroke-width="4" stroke-linecap="round" opacity="0.7" />
+      <text x="205" y="56" text-anchor="middle" font-family="'Impact', 'Arial Black', sans-serif" font-size="36" font-weight="900" fill="#2d170a" letter-spacing="1">INSERTAR CÓDIGO</text>
+    </g>
+
+    <!-- 3. BOTÓN INFERIOR DERECHO: HISTORIA -->
+    <g transform="translate(1480, 610)">
+      <rect x="0" y="0" width="395" height="110" rx="26" fill="#2d170a" />
+      <rect x="4" y="4" width="387" height="100" rx="22" fill="url(#btn-wood)" stroke="#5c3413" stroke-width="5" />
+      <path d="M26,12 L369,12" stroke="#fffbeb" stroke-width="4" stroke-linecap="round" opacity="0.7" />
+      <text x="197" y="70" text-anchor="middle" font-family="'Impact', 'Arial Black', sans-serif" font-size="54" font-weight="900" fill="#2d170a" letter-spacing="2">HISTORIA</text>
+    </g>
+
+    <!-- 4. BOTÓN INFERIOR DERECHO: INFINITO -->
+    <g transform="translate(1480, 755)">
+      <rect x="0" y="0" width="395" height="110" rx="26" fill="#2d170a" />
+      <rect x="4" y="4" width="387" height="100" rx="22" fill="url(#btn-wood)" stroke="#5c3413" stroke-width="5" />
+      <path d="M26,12 L369,12" stroke="#fffbeb" stroke-width="4" stroke-linecap="round" opacity="0.7" />
+      <text x="197" y="70" text-anchor="middle" font-family="'Impact', 'Arial Black', sans-serif" font-size="54" font-weight="900" fill="#2d170a" letter-spacing="2">INFINITO</text>
+    </g>
+
+    <!-- 5. BOTÓN INFERIOR DERECHO: RANKING -->
+    <g transform="translate(1480, 900)">
+      <rect x="0" y="0" width="395" height="110" rx="26" fill="#2d170a" />
+      <rect x="4" y="4" width="387" height="100" rx="22" fill="url(#btn-wood)" stroke="#5c3413" stroke-width="5" />
+      <path d="M26,12 L369,12" stroke="#fffbeb" stroke-width="4" stroke-linecap="round" opacity="0.7" />
+      <text x="197" y="70" text-anchor="middle" font-family="'Impact', 'Arial Black', sans-serif" font-size="54" font-weight="900" fill="#2d170a" letter-spacing="2">RANKING</text>
+    </g>
+  </g>
+</svg>

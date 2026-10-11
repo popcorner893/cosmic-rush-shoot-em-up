@@ -11,8 +11,8 @@ class CosmicRushEngine {
     constructor() {
         this.canvas = null;
         this.ctx = null;
-        this.width = 650;
-        this.height = 700;
+        this.width = 1280;
+        this.height = 720;
 
         // Estados del Juego: 'LOGIN', 'PLAYING', 'PAUSED', 'GAME_OVER', 'VICTORY'
         this.state = 'LOGIN';
@@ -86,7 +86,6 @@ class CosmicRushEngine {
 
         // Renderizar Récords iniciales
         this.updateLeaderboardUI();
-        this.updatePilotSelectionUI();
 
         // Bucle de renderizado principal
         requestAnimationFrame(this.loop.bind(this));
@@ -94,7 +93,15 @@ class CosmicRushEngine {
 
     bindDOM() {
         this.dom = {
-            loginOverlay: document.getElementById('loginOverlay'),
+            mainMenuOverlay: document.getElementById('mainMenuOverlay'),
+            mainMenuCover: document.getElementById('mainMenuCover'),
+            menuImageFallback: document.getElementById('menuImageFallback'),
+            btnMenuLogin: document.getElementById('btnMenuLogin'),
+            btnMenuStory: document.getElementById('btnMenuStory'),
+            btnMenuEndless: document.getElementById('btnMenuEndless'),
+            btnMenuRanking: document.getElementById('btnMenuRanking'),
+            btnMenuCode: document.getElementById('btnMenuCode'),
+
             hudOverlay: document.getElementById('hudOverlay'),
             gameOverModal: document.getElementById('gameOverModal'),
             victoryModal: document.getElementById('victoryModal'),
@@ -102,9 +109,6 @@ class CosmicRushEngine {
             pauseOverlay: document.getElementById('pauseOverlay'),
             bossWarningBanner: document.getElementById('bossWarningBanner'),
             dangerVignette: document.getElementById('dangerVignette'),
-            loginShipContainer: document.getElementById('loginShipContainer'),
-            loginHeroStatus: document.getElementById('loginHeroStatus'),
-            loginShipPreview: document.getElementById('loginShipPreview'),
             
             // HUD elementos
             hudPilotName: document.getElementById('hudPilotName'),
@@ -118,10 +122,6 @@ class CosmicRushEngine {
             bossHealthContainer: document.getElementById('bossHealthContainer'),
             bossHealthFill: document.getElementById('bossHealthFill'),
             bossHealthText: document.getElementById('bossHealthText'),
-
-            // Inputs
-            pilotInput: document.getElementById('pilotInput'),
-            avatarOptions: document.querySelectorAll('.avatar-card'),
 
             // Modales resultados
             finalScoreText: document.getElementById('finalScoreText'),
@@ -201,28 +201,101 @@ class CosmicRushEngine {
             });
         }
 
-        if (this.dom.avatarOptions) {
-            this.dom.avatarOptions.forEach(card => {
-                card.addEventListener('click', () => {
-                    const avatarId = card.getAttribute('data-avatar');
-                    this.pilot.avatar = avatarId;
-                    this.updatePilotSelectionUI();
+        // ==========================================
+        // BOTONES DEL MENÚ PRINCIPAL OFICIAL
+        // ==========================================
+        const menuButtons = [
+            this.dom.btnMenuLogin,
+            this.dom.btnMenuStory,
+            this.dom.btnMenuEndless,
+            this.dom.btnMenuRanking,
+            this.dom.btnMenuCode
+        ].filter(Boolean);
+
+        // Efecto sonoro de sintetizador al hacer hover sobre los botones
+        menuButtons.forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                window.soundEngine.playMenuHover();
+            });
+        });
+
+        // Botón HISTORIA: Inicia directamente el juego actual
+        if (this.dom.btnMenuStory) {
+            this.dom.btnMenuStory.addEventListener('click', () => {
+                window.soundEngine.playMenuClick();
+                this.startMission();
+            });
+        }
+
+        // Resto de botones: Respuesta sonora y visual en click, sin funcionalidad extra todavía
+        [this.dom.btnMenuLogin, this.dom.btnMenuEndless, this.dom.btnMenuRanking, this.dom.btnMenuCode]
+            .filter(Boolean)
+            .forEach(btn => {
+                btn.addEventListener('click', () => {
+                    window.soundEngine.playMenuClick();
                 });
             });
-        }
 
-        const btnStartGame = document.getElementById('btnStartGame');
-        if (btnStartGame) {
-            btnStartGame.addEventListener('click', () => {
-                this.confirmPilotAndStart();
+        // Asistente para seleccionar/arrastrar Main_Menu.jfif si no está aún en el servidor
+        const menuFileInput = document.getElementById('menuFileInput');
+        const btnSelectMenuImage = document.getElementById('btnSelectMenuImage');
+        const mainMenuStage = document.getElementById('mainMenuStage');
+
+        if (btnSelectMenuImage && menuFileInput) {
+            btnSelectMenuImage.addEventListener('click', () => {
+                menuFileInput.click();
             });
         }
 
-        const btnShowLeaderboard = document.getElementById('btnShowLeaderboard');
-        if (btnShowLeaderboard) {
-            btnShowLeaderboard.addEventListener('click', () => {
-                this.openLeaderboard();
+        const handleImageFile = (file) => {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const dataUrl = e.target.result;
+                if (this.dom.mainMenuCover) {
+                    this.dom.mainMenuCover.src = dataUrl;
+                }
+                if (this.dom.menuImageFallback) {
+                    this.dom.menuImageFallback.classList.add('hidden');
+                }
+                try {
+                    localStorage.setItem('cosmic_rush_menu_img', dataUrl);
+                } catch (_) {}
+
+                // Guardar en el servidor para persistencia definitiva
+                fetch('/api/save-menu-image', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ base64Data: dataUrl })
+                }).catch(err => console.warn('Could not save image to server:', err));
+            };
+            reader.readAsDataURL(file);
+        };
+
+        if (menuFileInput) {
+            menuFileInput.addEventListener('change', (e) => {
+                if (e.target.files && e.target.files[0]) {
+                    handleImageFile(e.target.files[0]);
+                }
             });
+        }
+
+        if (mainMenuStage) {
+            mainMenuStage.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+            mainMenuStage.addEventListener('drop', (e) => {
+                e.preventDefault();
+                if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    handleImageFile(e.dataTransfer.files[0]);
+                }
+            });
+        }
+
+        // Cargar del localStorage si se guardó previamente
+        const cachedImg = localStorage.getItem('cosmic_rush_menu_img');
+        if (cachedImg && this.dom.mainMenuCover) {
+            this.dom.mainMenuCover.src = cachedImg;
         }
 
         const btnCloseLeaderboard = document.getElementById('btnCloseLeaderboard');
@@ -271,35 +344,6 @@ class CosmicRushEngine {
         }
     }
 
-    updatePilotSelectionUI() {
-        if (!this.dom.avatarOptions) return;
-        this.dom.avatarOptions.forEach(card => {
-            const id = card.getAttribute('data-avatar');
-            card.classList.toggle('selected', id === this.pilot.avatar);
-        });
-
-        const avatarInfo = window.StorageManager.AVATARS.find(a => a.id === this.pilot.avatar) || window.StorageManager.AVATARS[0];
-        if (this.dom.loginShipContainer) {
-            this.dom.loginShipContainer.style.borderColor = avatarInfo.color;
-            this.dom.loginShipContainer.style.boxShadow = `0 0 24px ${avatarInfo.color}88, inset 0 0 16px ${avatarInfo.color}44`;
-        }
-        if (this.dom.loginHeroStatus) {
-            this.dom.loginHeroStatus.innerText = `${avatarInfo.role.toUpperCase()} // ${avatarInfo.name}`;
-            this.dom.loginHeroStatus.style.color = avatarInfo.color;
-            this.dom.loginHeroStatus.style.borderColor = `${avatarInfo.color}88`;
-            this.dom.loginHeroStatus.style.backgroundColor = `${avatarInfo.color}22`;
-        }
-    }
-
-    confirmPilotAndStart() {
-        const rawName = this.dom.pilotInput ? this.dom.pilotInput.value.trim() : '';
-        this.pilot.name = rawName ? rawName.toUpperCase().slice(0, 14) : 'PILOTO-01';
-
-        window.StorageManager.saveActivePilot(this.pilot);
-        window.soundEngine.init();
-        this.startMission();
-    }
-
     startMission() {
         this.state = 'PLAYING';
         this.wave = 1;
@@ -307,7 +351,8 @@ class CosmicRushEngine {
         this.combo = 0;
         this.comboTimer = 0;
 
-        this.dom.loginOverlay.classList.add('hidden');
+        if (this.dom.mainMenuOverlay) this.dom.mainMenuOverlay.classList.add('hidden');
+
         this.dom.gameOverModal.classList.add('hidden');
         this.dom.victoryModal.classList.add('hidden');
         this.dom.pauseOverlay.classList.add('hidden');
@@ -325,9 +370,11 @@ class CosmicRushEngine {
         window.particleSystem.clear();
         if (window.canvasShake) window.canvasShake.reset();
 
-        this.dom.hudPilotName.innerText = this.pilot.name;
-        this.dom.hudPilotBadge.innerText = avatarInfo.insignia;
-        this.dom.hudPilotBadge.style.color = avatarInfo.color;
+        if (this.dom.hudPilotName) this.dom.hudPilotName.innerText = this.pilot.name;
+        if (this.dom.hudPilotBadge) {
+            this.dom.hudPilotBadge.innerText = avatarInfo.insignia;
+            this.dom.hudPilotBadge.style.color = avatarInfo.color;
+        }
 
         this.setupWave(1);
     }
@@ -340,8 +387,8 @@ class CosmicRushEngine {
         this.enemySpawnInterval = Math.max(0.7, 1.5 - w * 0.12);
         this.boss = null;
         this.background.setBossMode(false);
-        this.dom.bossHealthContainer.classList.add('hidden');
-        this.dom.bossWarningBanner.classList.add('hidden');
+        if (this.dom.bossHealthContainer) this.dom.bossHealthContainer.classList.add('hidden');
+        if (this.dom.bossWarningBanner) this.dom.bossWarningBanner.classList.add('hidden');
         if (this.bossAlertTimeout) clearTimeout(this.bossAlertTimeout);
 
         this.updateHUD();
@@ -356,32 +403,26 @@ class CosmicRushEngine {
         this.setupWave(this.wave + 1);
     }
 
-    // Activación del Jefe: aviso rápido que solo sale al principio y no estorba
+    // Activación del Jefe
     triggerBossPhase() {
         this.background.setBossMode(true);
         window.soundEngine.playBossAlarm();
-
-        // Alerta solo al principio (se oculta sola en 1.4s)
-        this.dom.bossWarningBanner.classList.remove('hidden');
         window.particleSystem.triggerVibrate(7, 0.25, [70]);
 
-        if (this.bossAlertTimeout) clearTimeout(this.bossAlertTimeout);
-        this.bossAlertTimeout = setTimeout(() => {
-            this.dom.bossWarningBanner.classList.add('hidden');
-        }, 1400);
-
-        // Desplegar jefe inmediatamente
+        // Desplegar jefe inmediatamente sin letreros intrusivos
         this.spawnBoss();
     }
 
     spawnBoss() {
         this.boss = new window.FinalBoss(this.width, this.wave);
-        this.dom.bossHealthContainer.classList.remove('hidden');
-        this.updateBossHealthUI();
+        if (this.dom.bossHealthContainer) {
+            this.dom.bossHealthContainer.classList.remove('hidden');
+            this.updateBossHealthUI();
+        }
     }
 
     updateBossHealthUI() {
-        if (!this.boss) return;
+        if (!this.boss || !this.dom.bossHealthFill || !this.dom.bossHealthText) return;
         const pct = Math.max(0, Math.min(100, (this.boss.life / this.boss.maxLife) * 100));
         this.dom.bossHealthFill.style.width = `${pct}%`;
         this.dom.bossHealthText.innerText = `${Math.ceil(this.boss.life)} / ${this.boss.maxLife} HP`;
@@ -454,24 +495,23 @@ class CosmicRushEngine {
         for (let i = this.playerShots.length - 1; i >= 0; i--) {
             const shot = this.playerShots[i];
             shot.update(dt);
-            if (shot.isOffScreen()) {
+            if (shot.isOffScreen(this.width)) {
                 this.playerShots.splice(i, 1);
             }
         }
 
-        // Spawning de Enemigos Estándar y Enemigos Élite
+        // Spawning de Enemigos Estándar y Enemigos Élite (Distribuido a lo ancho de 1280px)
         if (this.enemiesRemainingToSpawn > 0) {
             this.enemySpawnTimer -= dt;
             if (this.enemySpawnTimer <= 0) {
                 this.enemySpawnTimer = this.enemySpawnInterval;
-                const startX = 60 + Math.random() * (this.width - 120);
+                const startX = 80 + Math.random() * (this.width - 160);
                 this.spawnedCountInWave++;
 
                 // Cada 4to enemigo generado es un Enemigo Élite (100% de drop de power-up)
                 const isElite = (this.spawnedCountInWave % 4 === 0);
                 if (isElite) {
                     this.enemies.push(new window.EliteEnemy(startX, -55, this.wave));
-                    window.particleSystem.addFloatingText(startX, 60, '👑 ¡ENEMIGO ÉLITE DETECTADO!', '#ffd700');
                     if (window.soundEngine.playBossHit) window.soundEngine.playBossHit();
                 } else {
                     this.enemies.push(new window.Enemy(startX, -50, this.wave));
@@ -556,7 +596,7 @@ class CosmicRushEngine {
                 this.powerups.push(new window.Powerup(this.boss.x + 60, this.boss.y, 'HEAL'));
 
                 this.boss = null;
-                this.dom.bossHealthContainer.classList.add('hidden');
+                if (this.dom.bossHealthContainer) this.dom.bossHealthContainer.classList.add('hidden');
                 this.updateHUD();
                 this.waveVictory(lifeBonus);
                 return;
@@ -777,7 +817,7 @@ class CosmicRushEngine {
         this.dom.victoryModal.classList.add('hidden');
         this.dom.pauseOverlay.classList.add('hidden');
         this.dom.hudOverlay.classList.add('hidden');
-        this.dom.loginOverlay.classList.remove('hidden');
+        if (this.dom.mainMenuOverlay) this.dom.mainMenuOverlay.classList.remove('hidden');
         if (this.dom.dangerVignette) this.dom.dangerVignette.classList.remove('active');
         if (window.canvasShake) window.canvasShake.reset();
         this.updateLeaderboardUI();

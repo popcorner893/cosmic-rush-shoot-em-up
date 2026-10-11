@@ -361,6 +361,52 @@ class SoundEngine {
         osc.start(now);
         osc.stop(now + 0.55);
     }
+
+    // Sonido sutil de sintetizador al pasar el cursor sobre los botones del menú
+    playMenuHover() {
+        if (!this.ctx || !this.enabled) return;
+        this.init();
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(520, now);
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.05);
+
+        gain.gain.setValueAtTime(this.volume * 0.22, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start(now);
+        osc.stop(now + 0.05);
+    }
+
+    // Sonido retro de confirmación al pulsar un botón del menú
+    playMenuClick() {
+        if (!this.ctx || !this.enabled) return;
+        this.init();
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.setValueAtTime(660, now + 0.04);
+        osc.frequency.setValueAtTime(880, now + 0.08);
+
+        gain.gain.setValueAtTime(this.volume * 0.4, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start(now);
+        osc.stop(now + 0.16);
+    }
 }
 
 window.soundEngine = new SoundEngine();
+

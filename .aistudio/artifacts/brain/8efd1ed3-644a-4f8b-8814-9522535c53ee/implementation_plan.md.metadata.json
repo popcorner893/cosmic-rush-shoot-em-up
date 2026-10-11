@@ -1,0 +1,6 @@
+{
+  "summary":  "Plan de implementación para el nuevo menú principal de Cosmic Rush basado en la imagen de portada proporcionada. Detalla la eliminación de la selección de perfil táctico, la integración de la imagen como portada, los 5 botones ('Historia', 'Infinito', 'Ranking', 'Insertar Código', 'Iniciar sesión') con efectos de hover neón y sonido retro, y la redirección exclusiva del botón Historia al juego.",
+  "updatedAt":  "2026-10-11T04:56:40.236739935Z",
+  "requestFeedback":  true,
+  "userFacing":  true
+}

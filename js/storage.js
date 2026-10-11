@@ -6,21 +6,13 @@ const StorageManager = {
     PILOT_STORAGE_KEY: 'cosmic_rush_active_pilot',
     SCORES_STORAGE_KEY: 'cosmic_rush_highscores_v2',
 
-    // Available pilot avatars/badges
-    AVATARS: [
-        { id: 'phoenix', name: 'FÉNIX ROJO', insignia: '🦅', color: '#ff3366', role: 'Comandante Táctico' },
-        { id: 'valkyrie', name: 'VALKIRIA', insignia: '⚡', color: '#00f0ff', role: 'Piloto Interceptor' },
-        { id: 'titan', name: 'TITÁN-9', insignia: '🛡️', color: '#39ff14', role: 'Blindaje Pesado' },
-        { id: 'specter', name: 'ESPECTRO', insignia: '👾', color: '#b026ff', role: 'Operaciones Especiales' }
-    ],
-
     // Default Seed Leaderboard
     DEFAULT_SCORES: [
-        { pilotName: 'CAPTAIN-SOLO', pilotAvatar: 'phoenix', score: 9800, wave: 4, date: '10/10/2026 12:40' },
-        { pilotName: 'STAR-LORD', pilotAvatar: 'valkyrie', score: 7200, wave: 3, date: '10/10/2026 11:15' },
-        { pilotName: 'CYBER-VALK', pilotAvatar: 'titan', score: 5400, wave: 2, date: '09/10/2026 20:30' },
-        { pilotName: 'NOVA-HUNTER', pilotAvatar: 'specter', score: 3200, wave: 2, date: '08/10/2026 18:22' },
-        { pilotName: 'ROOKIE-PILOT', pilotAvatar: 'valkyrie', score: 1500, wave: 1, date: '07/10/2026 09:10' }
+        { pilotName: 'CAPTAIN-SOLO', score: 9800, wave: 4, date: '10/10/2026 12:40' },
+        { pilotName: 'STAR-LORD', score: 7200, wave: 3, date: '10/10/2026 11:15' },
+        { pilotName: 'CYBER-VALK', score: 5400, wave: 2, date: '09/10/2026 20:30' },
+        { pilotName: 'NOVA-HUNTER', score: 3200, wave: 2, date: '08/10/2026 18:22' },
+        { pilotName: 'ROOKIE-PILOT', score: 1500, wave: 1, date: '07/10/2026 09:10' }
     ],
 
     // Load active pilot
@@ -28,21 +20,20 @@ const StorageManager = {
         try {
             const raw = localStorage.getItem(this.PILOT_STORAGE_KEY);
             if (raw) {
-                return JSON.parse(raw);
+                const parsed = JSON.parse(raw);
+                return { name: parsed.name || 'PILOTO-01' };
             }
         } catch (e) {
             console.warn('Storage read error:', e);
         }
-        return {
-            name: 'PILOTO-01',
-            avatar: 'valkyrie'
-        };
+        return { name: 'PILOTO-01' };
     },
 
     // Save active pilot
     saveActivePilot(pilot) {
         try {
-            localStorage.setItem(this.PILOT_STORAGE_KEY, JSON.stringify(pilot));
+            const name = typeof pilot === 'string' ? pilot : (pilot && pilot.name ? pilot.name : 'PILOTO-01');
+            localStorage.setItem(this.PILOT_STORAGE_KEY, JSON.stringify({ name: name.toUpperCase().trim() }));
         } catch (e) {
             console.warn('Storage write error:', e);
         }

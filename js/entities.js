@@ -79,7 +79,6 @@ class Player {
             this.shieldTimer -= dt;
             if (this.shieldTimer <= 0) {
                 this.hasShield = false;
-                window.particleSystem.addFloatingText(this.x + this.width / 2, this.y - 12, 'ESCUDO AGOTADO', '#94a3b8');
             }
         }
 
@@ -88,7 +87,6 @@ class Player {
             this.tripleShotTimer -= dt;
             if (this.tripleShotTimer <= 0 && this.blasterLevel === 3) {
                 this.blasterLevel = 2; // Desciende a cañón doble
-                window.particleSystem.addFloatingText(this.x + this.width / 2, this.y - 12, 'DISPARO TRIPLE EXPIRADO', '#94a3b8');
             }
         }
 
@@ -313,8 +311,8 @@ class PlayerShot {
         this.y -= this.vy * dt * 60;
     }
 
-    isOffScreen() {
-        return this.y < -30 || this.x < -30 || this.x > 700;
+    isOffScreen(canvasWidth = 1280) {
+        return this.y < -30 || this.x < -30 || this.x > (canvasWidth + 40);
     }
 
     draw(ctx) {
@@ -339,8 +337,8 @@ class Enemy {
         
         // Movimiento en Zig-Zag
         this.speedY = 1.6 + Math.min(2.5, wave * 0.35);
-        this.zigzagAmplitude = 50 + Math.random() * 45;
-        this.zigzagFrequency = 2.4 + Math.random() * 1.5;
+        this.zigzagAmplitude = 60 + Math.random() * 55;
+        this.zigzagFrequency = 2.2 + Math.random() * 1.5;
         this.time = Math.random() * Math.PI * 2;
 
         this.life = 1 + (wave >= 3 ? 1 : 0);
@@ -388,7 +386,7 @@ class Enemy {
     }
 
     canShoot() {
-        return !this.isDying && this.shootCooldown <= 0 && this.y > 20 && this.y < 520;
+        return !this.isDying && this.shootCooldown <= 0 && this.y > 20 && this.y < 600;
     }
 
     shoot() {
@@ -650,7 +648,6 @@ class FinalBoss {
             }
             window.particleSystem.triggerVibrate(15, 0.7, [120, 60, 160, 60, 220]);
             window.particleSystem.setContinuousTremor(2.5);
-            window.particleSystem.addFloatingText(this.x + this.width / 2, this.y - 12, '⚡ ¡FURIA JEFE ACTIVADA!', '#ff0033');
         }
 
         // Entrada inicial
@@ -709,12 +706,15 @@ class FinalBoss {
             const speed = 5.3;
             shots.push(new EnemyShot(cx - 7, cy, Math.cos(angle) * speed, Math.sin(angle) * speed));
         } else {
-            // PATRÓN 3: Cortina masiva de 5 proyectiles (Bullet Hell - Parte difícil)
-            this.shootTimer = this.enraged ? 1.0 : 1.5;
+            // PATRÓN 3: Cortina de proyectiles panorámica (Bullet Hell - Parte difícil)
+            this.shootTimer = this.enraged ? 0.95 : 1.4;
             window.soundEngine.playBossShoot();
             if (window.canvasShake) window.canvasShake.addTrauma(0.55);
             window.particleSystem.triggerVibrate(12, 0.4, [90, 40, 90, 40, 110]);
-            [-2.6, -1.3, 0, 1.3, 2.6].forEach(vx => {
+            const spreadAngles = this.enraged 
+                ? [-3.6, -2.4, -1.2, 0, 1.2, 2.4, 3.6]
+                : [-2.8, -1.4, 0, 1.4, 2.8];
+            spreadAngles.forEach(vx => {
                 shots.push(new EnemyShot(cx - 7, cy, vx, 4.8));
             });
         }
@@ -865,7 +865,7 @@ class ParallaxBackground {
         this.height = canvasHeight;
 
         this.starsLayer1 = [];
-        for (let i = 0; i < 45; i++) {
+        for (let i = 0; i < 90; i++) {
             this.starsLayer1.push({
                 x: Math.random() * canvasWidth,
                 y: Math.random() * canvasHeight,
@@ -876,7 +876,7 @@ class ParallaxBackground {
         }
 
         this.starsLayer2 = [];
-        for (let i = 0; i < 25; i++) {
+        for (let i = 0; i < 50; i++) {
             this.starsLayer2.push({
                 x: Math.random() * canvasWidth,
                 y: Math.random() * canvasHeight,
